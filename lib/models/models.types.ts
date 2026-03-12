@@ -1,13 +1,13 @@
-export interface JobApplication {
+export interface JobApplications {
   _id: string;
-  comapny: string;
-  postition?: string;
+  company: string;
+  position?: string;
   location: string;
   role: string;
   notes: string;
   salary?: string;
   jobUrl?: string;
-  order: string;
+  order: number;
   columnId: string;
   tags?: string[];
   description: string;
@@ -16,8 +16,8 @@ export interface JobApplication {
 export interface Column {
   _id: string;
   name: string;
-  order: string;
-  jobApplication: JobApplication[];
+  order: number;
+  jobApplications: JobApplications[];
 }
 
 export interface Board {

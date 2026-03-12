@@ -5,17 +5,27 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { initializeUserBoard } from "../init-user-board";
 
-// creating client for the adapters ->
 const client = new MongoClient(process.env.MONGODB_URI!);
+
+// CONNECT CLIENT
+await client.connect();
+
 const db = client.db();
 
 export const auth = betterAuth({
-  //...
   database: mongodbAdapter(db, { client }),
-  //   setting the authentication :-
+  session: {
+    cookieCache: {
+      enabled: true,
+      // The maxAge is for the cache cookie .
+      maxAge: 60 * 60,
+    },
+  },
+
   emailAndPassword: {
     enabled: true,
   },
+
   databaseHooks: {
     user: {
       create: {
@@ -29,21 +39,19 @@ export const auth = betterAuth({
   },
 });
 
-// New handler for the navbar :-
+// session handler
 export async function getSession() {
-  const result = await auth.api.getSession({
-    // passing the header :-
-    // Allow to read the HTTP incoming request :-
+  return await auth.api.getSession({
     headers: await headers(),
   });
-  return result;
 }
 
-// Function for signout :-
+// sign out
 export async function signOut() {
   const result = await auth.api.signOut({
     headers: await headers(),
   });
+
   if (result.success) {
     redirect("/sign-in");
   }
