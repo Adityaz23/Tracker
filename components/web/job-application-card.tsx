@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
+import { updateJobApplication } from "@/lib/actions/job-applications";
 
 interface JobApplicationCardProps {
   job: JobApplications;
@@ -23,6 +24,16 @@ export default function JobApplicationCard({
   job,
   columns,
 }: JobApplicationCardProps) {
+  // calling the drop and down edits: -
+  async function handleMove(newColumnId: string) {
+    try {
+      const result = await updateJobApplication(job._id, {
+        columnId: newColumnId,
+      });
+    } catch (err) {
+      console.error("Failed to move job application: ", err);
+    }
+  }
   return (
     <div>
       <Card className="group relative rounded-xl border bg-white hover:shadow-md transition-all duration-200 cursor-pointer">
@@ -105,6 +116,7 @@ export default function JobApplicationCard({
                           <DropdownMenuItem
                             key={column._id}
                             className="text-xs text-muted-foreground"
+                            onClick={() => handleMove(column._id)}
                           >
                             Move to {column.name}
                           </DropdownMenuItem>
