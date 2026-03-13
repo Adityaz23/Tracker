@@ -228,3 +228,34 @@ export async function updateJobApplication(
 
   return { data: JSON.parse(JSON.stringify(updated)) };
 }
+
+// delete the job schema :-
+export async function deleteJobApplication(id: string) {
+  const session = await getSession();
+
+  if (!session?.user) {
+    return { error: "Unauthorised" };
+  }
+
+  await connectionDB();
+
+  const jobApplication = await JobApplication.findById(id);
+
+  if (!jobApplication) {
+    return { error: "Job application not found" };
+  }
+
+  if (jobApplication.userId !== session.user.id) {
+    return { error: "Unauthorised" };
+  }
+
+  await Column.findByIdAndUpdate(jobApplication.columnId, {
+    $pull: { jobApplications: id },
+  });
+
+  await JobApplication.findByIdAndDelete(id);
+
+  revalidatePath("/dashboard");
+
+  return { success: true };
+}
