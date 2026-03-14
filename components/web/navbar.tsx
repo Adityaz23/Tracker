@@ -16,7 +16,7 @@ import { useSession } from "@/lib/auth/auth-client";
 export default function Navbar() {
   const { data: session } = useSession();
   return (
-   <nav className="border-b border-gray-200 bg-white">
+   <nav className="border-b border-gray-200 bg-white rounded-b-2xl">
   <div className="mx-auto max-w-6xl px-4">
     <div className="flex h-16 items-center justify-between">
 
@@ -25,8 +25,11 @@ export default function Navbar() {
         href="/"
         className="flex items-center gap-2 text-lg sm:text-xl font-semibold text-gray-800"
       >
-        <BriefcaseBusinessIcon size={26} className="text-indigo-600" />
+        <BriefcaseBusinessIcon size={26} className="text-pink-600" />
+        <span className="text-pink-600">
+
         Job Tracker
+        </span>
       </Link>
 
       {/* Right Section */}
@@ -51,7 +54,7 @@ export default function Navbar() {
                   className="rounded-full h-9 w-9 p-0 hover:bg-gray-100"
                 >
                   <Avatar className="h-8 w-8">
-                    <AvatarFallback className="bg-indigo-100 text-indigo-600 font-semibold">
+                    <AvatarFallback className="bg-pink-500 text-white font-semibold">
                       {session.user.name[0].toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
