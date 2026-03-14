@@ -16,7 +16,7 @@ import {
   MoreVertical,
   Trash2Icon,
 } from "lucide-react";
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 import { Card, CardContent } from "../ui/card";
 import {
@@ -34,11 +34,13 @@ import { Textarea } from "../ui/textarea";
 interface JobApplicationCardProps {
   job: JobApplications;
   columns: Column[];
+  dragHandleProps?:React.HTMLAttributes<HTMLElement>
 }
 
 export default function JobApplicationCard({
   job,
   columns,
+  dragHandleProps,
 }: JobApplicationCardProps) {
   // For the user when they are editing :-
   const [isEditing, setIsEditing] = useState(false);
@@ -98,8 +100,10 @@ export default function JobApplicationCard({
     }
   }
   return (
-    <div>
-      <Card className="group relative rounded-xl border bg-white hover:shadow-md transition-all duration-200 cursor-pointer">
+    <>
+      <Card className="group relative rounded-xl border bg-white hover:shadow-md transition-all duration-200 cursor-pointer" 
+      {...dragHandleProps}
+      >
         <CardContent className="p-4">
           <div className="flex justify-between gap-3">
             {/* LEFT CONTENT */}
@@ -348,6 +352,6 @@ max-h-[90vh] overflow-y-auto rounded-xl border shadow-lg p-6"
           </form>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }
