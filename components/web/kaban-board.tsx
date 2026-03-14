@@ -42,7 +42,7 @@ import CreateJobApplicationDialog from "./CreateJobApplicationDialog ";
 import JobApplicationCard from "./job-application-card";
 import { useBoard } from "@/lib/hooks/use-board";
 import { deleteColumn } from "@/lib/actions/column";
-
+import { toast } from "sonner";
 
 interface KanbanBoardProps {
   board: Board;
@@ -76,7 +76,6 @@ const COLUMN_CONFIG: Array<ColConfig> = [
   },
 ];
 
-
 function DroppableColumn({
   column,
   config,
@@ -96,11 +95,23 @@ function DroppableColumn({
     },
   });
   // for the deletion of the whole column :-
-async function handleDeleteColumn() {
-  const result = await deleteColumn(column._id);
-  if (result?.error) {
-    console.error(result.error);
-  }
+
+ async function handleDeleteColumn() {
+  toast("Delete this column?", {
+    description: "This will remove the column and all its jobs.",
+    action: {
+      label: "Delete",
+      onClick: async () => {
+        const result = await deleteColumn(column._id);
+
+        if (result?.error) {
+          toast.error(result.error);
+        } else {
+          toast.success("Column deleted successfully");
+        }
+      },
+    },
+  });
 }
 
   const sortedJobs =
