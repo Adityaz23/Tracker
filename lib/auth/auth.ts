@@ -5,19 +5,31 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { initializeUserBoard } from "../init-user-board";
 
-const client = new MongoClient(process.env.MONGODB_URI!);
+const uri = process.env.MONGODB_URI!;
 
-// CONNECT CLIENT
-await client.connect();
+let client: MongoClient;
+let clientPromise: Promise<MongoClient>;
 
-const db = client.db();
+declare global {
+  var _mongoClientPromise: Promise<MongoClient> | undefined;
+}
+
+if (!global._mongoClientPromise) {
+  client = new MongoClient(uri);
+  global._mongoClientPromise = client.connect();
+}
+
+clientPromise = global._mongoClientPromise;
+
+const clientConnected = await clientPromise;
+const db = clientConnected.db();
 
 export const auth = betterAuth({
-  database: mongodbAdapter(db, { client }),
+  database: mongodbAdapter(db, { client: clientConnected }),
+
   session: {
     cookieCache: {
       enabled: true,
-      // The maxAge is for the cache cookie .
       maxAge: 60 * 60,
     },
   },

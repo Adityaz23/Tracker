@@ -28,7 +28,7 @@ export default function Navbar() {
         <BriefcaseBusinessIcon size={26} className="text-pink-600" />
         <span className="text-pink-600">
 
-        Job Tracker
+        Huntify
         </span>
       </Link>
 
